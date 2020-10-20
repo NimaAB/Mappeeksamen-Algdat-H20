@@ -1,9 +1,5 @@
-package no.oslomet.cs.algdat.Eksamen;
-
-
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.StringJoiner;
 
 public class EksamenSBinTre<T> {

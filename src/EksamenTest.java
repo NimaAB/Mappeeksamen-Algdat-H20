@@ -1,9 +1,4 @@
-package no.oslomet.cs.algdat.Eksamen;
-
-
 ////// Testprogram for mappeeksamen ////////////////////////
-
-import no.oslomet.cs.algdat.Eksamen.EksamenSBinTre;
 
 import java.util.ArrayList;
 import java.util.Comparator;
