@@ -2,6 +2,7 @@ package no.oslomet.cs.algdat.Eksamen;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 public class EksamenSBinTre<T> {
@@ -82,7 +83,43 @@ public class EksamenSBinTre<T> {
     }
 
     public boolean leggInn(T verdi) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        Objects.requireNonNull(verdi, "Nullverdi er ikke lov!"); //sjekker om verdi ikke lik "null"
+
+        //Her begynner fra rot noden, og deklarer to pekere:
+        Node<T> current = rot;
+        Node<T> previous = null; //denne noden skal peke på siste node før vi når null.
+
+        int comperatorVerdi = 0; //den skal lagre verdien (-1,0,1) fra compare(o1,o2).
+
+        //går gjennom treet frem til current peker er null, dvs. et nivå etter siste nivå:
+        while (current != null) {
+
+            previous = current; //vi pegker på noden som vi skal flyte fra til neste node.
+
+            //før vi flytter til neste node sjekker vi om (current.verdi > verdi):
+            comperatorVerdi = comp.compare(current.verdi, verdi); //den skal returnere 1 for sant og -1 for usant.
+
+            //current skal peke på venstre barn hvis foreldre node var større en verdi, eller til høyre barn om verdi var større.
+            current = (comperatorVerdi > 0) ? current.venstre : current.høyre;
+        }
+
+        //etter løkken så har vi current lik null, der med instansierer vi en node med verdien og til ordner den til current pekker.
+        //det er for minske antall hjelpe variabler, siden current noden har blitt null.
+        current = new Node<T>(verdi, previous); //den nye noden skal ha verdien og foreldren blir den forrige pekere bak.
+        //og hvis den forrige pekkeren er null dvs. at treet er tom og vi lager en rot med denne noden.
+
+        if (previous == null) { //treet er tom
+            rot = current;
+        } else if (comperatorVerdi > 0) { //foreldere sin verdi er større enn ny verdi.
+            //legger til som venstre barn:
+            previous.venstre = current;
+        } else { //foreldere sin verdi er mindre enn ny verdi.
+            //legger til som høyre barn:
+            previous.høyre = current;
+        }
+
+        antall++; //oppdaterer antall tallet med +1
+        return true; // returnerer sant
     }
 
     public boolean fjern(T verdi) {
