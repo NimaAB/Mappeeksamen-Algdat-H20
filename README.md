@@ -15,8 +15,9 @@ Se oblig-tekst for alle krav, og husk spesielt på følgende:
 # Beskrivelse av oppgaveløsning (4-8 linjer/setninger per oppgave)
 
 Jeg har brukt git til å dokumentere arbeidet vårt. Jeg har <ant-commits> commits totalt, og hver logg-melding beskriver det jeg har gjort av endringer.
-* Started 20.10.2020  med å lage git repository og fikse litt av import feilene.
+* **Oppgave 0:** Started 20.10.2020  med å lage git repository og fikse litt av import feilene.
 
-* no.oslomet.cs.algdat.Eksamen.Oppgave 1: løste oppgaven ved å deklere to pekere en peker på roten og den andre peker på null. i en while-løkke deklarer jeg den andre pekeren til roten og flyter den føstre pekeren til å peke på en av barna til rot noden. Hvis verdien er mindre enn foreldre noden så peker den på venstre barn eller motsatt. Tilslutt har vi denne pekeren lik null og da forrige pekere peker på siste noden. Og da kan vi legge til denne nye noden som venstre eller høyre barn til denne noden basert på om verdien er større eller mindre enn foreldre noden sin verdi. og hvis treet var tom da blir den nya noden roten av treet. 
+* **no.oslomet.cs.algdat.Eksamen.Oppgave 1:** løste oppgaven ved å deklere to pekere en peker på roten og den andre peker på null. i en while-løkke deklarer jeg den andre pekeren til roten og flyter den føstre pekeren til å peke på en av barna til rot noden. Hvis verdien er mindre enn foreldre noden så peker den på venstre barn eller motsatt. Tilslutt har vi denne pekeren lik null og da forrige pekere peker på siste noden. Og da kan vi legge til denne nye noden som venstre eller høyre barn til denne noden basert på om verdien er større eller mindre enn foreldre noden sin verdi. og hvis treet var tom da blir den nya noden roten av treet. 
 
-* no.oslomet.cs.algdat.Eksamen.Oppgave 2: ...
+* **no.oslomet.cs.algdat.Eksamen.Oppgave 2:** implementeringen er slik at
+jeg begynner med å sjekke om verdien finnes i treet med metoden inneholder(verdi) hvis ikke så returneres 0. Og følgendemetode sjekker for null-verdi og tom tre. Videre lager jeg en peker på roten og en hjelpe variabel for å telle antall like verdier. I en while-løkke begynner jeg fra roten og sjekker om `(current.verdien >= verdi)` og den returnerer 0 for lik, 1 for større og -1 for mindre. Hvis det er -1 så fortsetter den til venstre. Hvis det er 1 til høyre og 0 til høyre itillegg økes det teller med en. Tilslutt returnerer jeg resultatet fra telleren.      

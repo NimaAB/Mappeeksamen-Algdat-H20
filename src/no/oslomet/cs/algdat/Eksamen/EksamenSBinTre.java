@@ -131,21 +131,23 @@ public class EksamenSBinTre<T> {
     }
 
     public int antall(T verdi) {
-        if(!inneholder(verdi)) return 0;
-        int antall_forekomster = 0;
-        Node<T> current = rot;
-        while(current!=null){
-            int comperator_verdi = comp.compare(current.verdi,verdi);
-            if(comperator_verdi>0){
-                current = current.venstre;
-            }else if(comperator_verdi<0){
-                current = current.høyre;
-            }else {
-                antall_forekomster++;
+        if(!inneholder(verdi)) return 0; //Hvis treet ikke inneholder verdien så returnerer jeg 0.
+        //og følgende if kontrol behandler tilfeldene om treet er tom eller verdien er null.
+
+        int antall_forekomster = 0; //en tellende variable for antall like node med verdi lik verdi.
+        Node<T> current = rot; // Begynner fra rot noden og går ned over i treet.
+        while(current!=null){ //frem til siste nivå.
+            int comperator_verdi = comp.compare(current.verdi,verdi); //den skal returnere 1 for sant, -1 for usant og 0 om de er like.
+            if(comperator_verdi>0){//hvis det er 1:
+                current = current.venstre; //går videre til venstre barnet.
+            }else if(comperator_verdi<0){ //hvis det er -1:
+                current = current.høyre; //går ned til høre barnet
+            }else { //ellers så er det 0 og verdi == current.verdi:
+                antall_forekomster++; //øker antall med 1
+                current = current.høyre; //fortsetter til høyre barn det slik legginn metoden er implementert også.
             }
         }
-
-        return antall_forekomster;
+        return antall_forekomster; //returnerer antall like virdier tilslutt.
     }
 
     public void nullstill() {
