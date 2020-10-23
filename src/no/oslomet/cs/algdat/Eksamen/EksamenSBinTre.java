@@ -131,7 +131,21 @@ public class EksamenSBinTre<T> {
     }
 
     public int antall(T verdi) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if(!inneholder(verdi)) return 0;
+        int antall_forekomster = 0;
+        Node<T> current = rot;
+        while(current!=null){
+            int comperator_verdi = comp.compare(current.verdi,verdi);
+            if(comperator_verdi>0){
+                current = current.venstre;
+            }else if(comperator_verdi<0){
+                current = current.høyre;
+            }else {
+                antall_forekomster++;
+            }
+        }
+
+        return antall_forekomster;
     }
 
     public void nullstill() {
