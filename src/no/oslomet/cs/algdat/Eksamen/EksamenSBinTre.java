@@ -1,9 +1,6 @@
 package no.oslomet.cs.algdat.Eksamen;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.*;
 
 public class EksamenSBinTre<T> {
     private static final class Node<T>   // en indre nodeklasse
@@ -155,23 +152,38 @@ public class EksamenSBinTre<T> {
     }
 
     private static <T> Node<T> førstePostorden(Node<T> p) {
-        Node <T> venstre = null;
-        Node <T> høyre=null;
-        if(p.venstre!=null){
-            venstre = førstePostorden(p.venstre);
-        }else{
-            høyre = førstePostorden((p.høyre));
+        ArrayDeque<Node<T>> stakEn = new ArrayDeque<>();
+        ArrayDeque<Node<T>> stakTo = new ArrayDeque<>();
+        stakEn.push(p);
+        while (!stakEn.isEmpty()) {
+            Node<T> current = stakEn.pop();
+            if (current.venstre != null) {
+                stakEn.push(current.venstre);
+            }
+            if (current.høyre != null) {
+                stakEn.push(current.høyre);
+            }
+            stakTo.push(current);
         }
-        if(venstre == null){
-            return høyre;
-        }else{
-            return venstre;
-        }
+        return stakTo.peekFirst();
     }
 
     private static <T> Node<T> nestePostorden(Node<T> p) {
-
-        return null;
+        ArrayDeque<Node<T>> stakEn = new ArrayDeque<>();
+        ArrayDeque<Node<T>> stakTo = new ArrayDeque<>();
+        stakEn.push(p);
+        while (!stakEn.isEmpty()) {
+            Node<T> current = stakEn.pop();
+            if (current.venstre != null) {
+                stakEn.push(current.venstre);
+            }
+            if (p.høyre != null) {
+                stakEn.push(current.høyre);
+            }
+            stakTo.push(current);
+        }
+        stakTo.removeFirst();
+        return stakTo.peekFirst();
     }
 
     public void postorden(Oppgave<? super T> oppgave) {
