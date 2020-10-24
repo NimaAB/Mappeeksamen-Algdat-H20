@@ -131,18 +131,18 @@ public class EksamenSBinTre<T> {
     }
 
     public int antall(T verdi) {
-        if(!inneholder(verdi)) return 0; //Hvis treet ikke inneholder verdien så returnerer jeg 0.
+        if (!inneholder(verdi)) return 0; //Hvis treet ikke inneholder verdien så returnerer jeg 0.
         //og følgende if kontrol behandler tilfeldene om treet er tom eller verdien er null.
 
         int antall_forekomster = 0; //en tellende variable for antall like node med verdi lik verdi.
         Node<T> current = rot; // Begynner fra rot noden og går ned over i treet.
-        while(current!=null){ //frem til siste nivå.
-            int comperator_verdi = comp.compare(current.verdi,verdi); //den skal returnere 1 for sant, -1 for usant og 0 om de er like.
-            if(comperator_verdi>0){//hvis det er 1:
+        while (current != null) { //frem til siste nivå.
+            int comperator_verdi = comp.compare(current.verdi, verdi); //den skal returnere 1 for sant, -1 for usant og 0 om de er like.
+            if (comperator_verdi > 0) {//hvis det er 1:
                 current = current.venstre; //går videre til venstre barnet.
-            }else if(comperator_verdi<0){ //hvis det er -1:
+            } else if (comperator_verdi < 0) { //hvis det er -1:
                 current = current.høyre; //går ned til høre barnet
-            }else { //ellers så er det 0 og verdi == current.verdi:
+            } else { //ellers så er det 0 og verdi == current.verdi:
                 antall_forekomster++; //øker antall med 1
                 current = current.høyre; //fortsetter til høyre barn det slik legginn metoden er implementert også.
             }
@@ -155,11 +155,23 @@ public class EksamenSBinTre<T> {
     }
 
     private static <T> Node<T> førstePostorden(Node<T> p) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        Node <T> venstre = null;
+        Node <T> høyre=null;
+        if(p.venstre!=null){
+            venstre = førstePostorden(p.venstre);
+        }else{
+            høyre = førstePostorden((p.høyre));
+        }
+        if(venstre == null){
+            return høyre;
+        }else{
+            return venstre;
+        }
     }
 
     private static <T> Node<T> nestePostorden(Node<T> p) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
+        return null;
     }
 
     public void postorden(Oppgave<? super T> oppgave) {
