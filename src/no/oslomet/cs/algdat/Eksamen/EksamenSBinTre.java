@@ -190,7 +190,23 @@ public class EksamenSBinTre<T> {
     }
 
     public void postorden(Oppgave<? super T> oppgave) {
-        //throw new UnsupportedOperationException("Ikke kodet ennå!");
+        ArrayDeque<Node<T>> stakEn = new ArrayDeque<>();//lager en stak for å legge nodene middlertidig inn.
+        ArrayDeque<Node<T>> stakTo = new ArrayDeque<>();//denne stakken skal lagre noden i riktig rekkefølge.
+        stakEn.push(rot); //legger til noden vi begynner fra i stakken (f.eks. rot)
+        while (!stakEn.isEmpty()) {//så lenge stakk en er ikke tom
+            Node<T> current = stakEn.pop(); //tar ut første noden fra stakk en og beolder den i current
+            if (current.venstre != null) { //hvis current har venstre barn
+                stakEn.push(current.venstre);//så legges den inn i stakk en
+            }
+            if (current.høyre != null) {//der etter sjekker for høyre barn
+                stakEn.push(current.høyre); //så legges den etter venstre barnet.
+            }
+            stakTo.push(current);//tilslutt legger vi foreldren dere til stakTo.
+        }
+        while(!stakTo.isEmpty()){
+            T valueOfCurrentNode =  stakTo.removeFirst().verdi;
+            oppgave.utførOppgave(valueOfCurrentNode);
+        }
     }
 
     public void postordenRecursive(Oppgave<? super T> oppgave) {
@@ -198,7 +214,7 @@ public class EksamenSBinTre<T> {
     }
 
     private void postordenRecursive(Node<T> p, Oppgave<? super T> oppgave) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
     }
 
     public ArrayList<T> serialize() {
