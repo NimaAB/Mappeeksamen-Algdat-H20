@@ -21,3 +21,16 @@ Jeg har brukt git til å dokumentere arbeidet vårt. Jeg har <ant-commits> commi
 
 * **no.oslomet.cs.algdat.Eksamen.Oppgave 2:** implementeringen er slik at
 jeg begynner med å sjekke om verdien finnes i treet med metoden inneholder(verdi) hvis ikke så returneres 0. Og følgendemetode sjekker for null-verdi og tom tre. Videre lager jeg en peker på roten og en hjelpe variabel for å telle antall like verdier. I en while-løkke begynner jeg fra roten og sjekker om `(current.verdien >= verdi)` og den returnerer 0 for lik, 1 for større og -1 for mindre. Hvis det er -1 så fortsetter den til venstre. Hvis det er 1 til høyre og 0 til høyre itillegg økes det teller med en. Tilslutt returnerer jeg resultatet fra telleren.      
+
+* **no.oslomet.cs.algdat.Oppgave 3:** Metoden føstePostorden(p) er løst ved hjelp av en hjelpe stakk og en hoved stakk.
+Hvor jeg pusher foreldre nodene i hjelpestakken, så poper dem ut og legger til venstre og etter på høyre barna deres i hjelpe stakken. Og til slutt legges de 
+i hoved stakken. Etter at hjelpe stakken blir tom så returneres det første noden fra hoved stakken.
+
+Metoden nestePostorden(p) sjekker først om p er rot, hvis det er sant så har den ikke neste node i postorden rekkefølge.
+etter på sjekkes det om p er høyre barnet til subtreet, hvis det så er neste node forelderen dens.
+Hvis ingen av de overst er riktig, så peker jeg på foreldren til p og lager en annen peker som peker på siste noden som den forrige har pekt på.
+så lenge den første pekeren ikke null gjørs følgende: 
+har pekeren venstre eller er den lik venstre barn, så er vi ikke intresert i det og går og peker på høyre barn.
+ellers går vi og peker på venstre barnet.
+
+* **no.oslomet.cs.algdat.Oppgave 4:** 

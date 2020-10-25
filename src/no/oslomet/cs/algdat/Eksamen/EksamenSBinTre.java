@@ -152,42 +152,45 @@ public class EksamenSBinTre<T> {
     }
 
     private static <T> Node<T> førstePostorden(Node<T> p) {
-        ArrayDeque<Node<T>> stakEn = new ArrayDeque<>();
-        ArrayDeque<Node<T>> stakTo = new ArrayDeque<>();
-        stakEn.push(p);
-        while (!stakEn.isEmpty()) {
-            Node<T> current = stakEn.pop();
-            if (current.venstre != null) {
-                stakEn.push(current.venstre);
+        ArrayDeque<Node<T>> stakEn = new ArrayDeque<>();//lager en stak for å legge nodene middlertidig inn.
+        ArrayDeque<Node<T>> stakTo = new ArrayDeque<>();//denne stakken skal lagre noden i riktig rekkefølge.
+        stakEn.push(p); //legger til noden vi begynner fra i stakken (f.eks. rot)
+        while (!stakEn.isEmpty()) {//så lenge stakk en er ikke tom
+            Node<T> current = stakEn.pop(); //tar ut første noden fra stakk en og beolder den i current
+            if (current.venstre != null) { //hvis current har venstre barn
+                stakEn.push(current.venstre);//så legges den inn i stakk en
             }
-            if (current.høyre != null) {
-                stakEn.push(current.høyre);
+            if (current.høyre != null) {//der etter sjekker for høyre barn
+                stakEn.push(current.høyre); //så legges den etter venstre barnet.
             }
-            stakTo.push(current);
+            stakTo.push(current);//tilslutt legger vi foreldren dere til stakTo.
         }
-        return stakTo.peekFirst();
+        return stakTo.peekFirst();//og i slutten returneres føste noden i stakk to.
     }
 
+
     private static <T> Node<T> nestePostorden(Node<T> p) {
-        ArrayDeque<Node<T>> stakEn = new ArrayDeque<>();
-        ArrayDeque<Node<T>> stakTo = new ArrayDeque<>();
-        stakEn.push(p);
-        while (!stakEn.isEmpty()) {
-            Node<T> current = stakEn.pop();
-            if (current.venstre != null) {
-                stakEn.push(current.venstre);
-            }
-            if (p.høyre != null) {
-                stakEn.push(current.høyre);
-            }
-            stakTo.push(current);
+        if (p.forelder == null) { //hvis p ikke har forledre, dvs. p er rot
+            return null; //og ingen neste node i postorden rekkefølge.
         }
-        stakTo.removeFirst();
-        return stakTo.peekFirst();
+        if (p == p.forelder.høyre) {//hvis noden er lik høyre barnet til foreldren
+            return p.forelder; //returneres foreldren til p.
+        }
+        Node<T> current = p.forelder; // deklarerer current node som er foreldren til p
+        Node<T> prev = null; //og prev blir siste node som current har pekt på.
+        while (current != null) { //så lenge current ikke nådd under siste nivå
+            prev = current; //prev peker på den siste som current har pekt på.
+            if (current.venstre == null || current.venstre == p) {//current sin venstre barn er null eller lik p
+                current = current.høyre; //da går vi til høyre barnet til current, fordi p er enten venstre barn eller null.
+            } else { //ellers p er ikke foreldren sin venstre barn og heller ikke null
+                current = current.venstre; // da går vi til venstre.
+            }
+        }
+        return prev; // til slutt returneres prev som holder på siste node før current ble null.
     }
 
     public void postorden(Oppgave<? super T> oppgave) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        //throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
 
     public void postordenRecursive(Oppgave<? super T> oppgave) {
