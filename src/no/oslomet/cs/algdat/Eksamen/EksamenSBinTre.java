@@ -121,7 +121,63 @@ public class EksamenSBinTre<T> {
 
     public boolean fjern(T verdi) {
         Node<T> node = finnNode(verdi, rot, comp);
-        return node != null;
+        if(node == rot && antall==1){
+            rot = null;
+            antall--;
+            return true;
+        }
+        if(node==rot && antall==2){
+            if(node.venstre != null){
+                rot = node.venstre;
+            }else{
+                rot = node.høyre;
+            }
+            antall--;
+            return true;
+        }
+        //leaf node:
+        if (node.venstre == null && node.høyre == null) {
+            if (node == node.forelder.venstre) {
+                node.forelder.venstre = null;
+            } else {
+                node.forelder.høyre = null;
+            }
+            antall--;
+            return true;
+        }
+        //node med et barn:
+        if ((node.venstre != null ^ node.høyre != null) && node != rot) {//xor
+            if (node.venstre != null) {
+                if (node == node.forelder.venstre) {
+                    node.forelder.venstre = node.venstre;
+                } else {
+                    node.forelder.høyre = node.venstre;
+                }
+                node.venstre.forelder = node.forelder;
+            } else {
+                if (node == node.forelder.venstre) {
+                    node.forelder.venstre = node.høyre;
+                } else {
+                    node.forelder.høyre = node.høyre;
+                }
+                node.høyre.forelder = node.forelder;
+            }
+            antall--;
+            return true;
+        }
+        //hvis node med har både høyre og venstre barn:
+        if(node.venstre!=null && node.høyre!=null){
+            Node<T> nyNode = nesteInorden(node);
+            node.verdi = nyNode.verdi;
+            if (nyNode == nyNode.forelder.venstre) {
+                nyNode.forelder.venstre = null;
+            } else {
+                nyNode.forelder.høyre = null;
+            }
+            antall--;
+            return false;
+        }
+        return false;
     }
 
     public int fjernAlle(T verdi) {
@@ -191,14 +247,14 @@ public class EksamenSBinTre<T> {
     }
 
     public void postorden(Oppgave<? super T> oppgave) {
-        if(rot == null) return; //sjekker om treet ikke tom
+        if (rot == null) return; //sjekker om treet ikke tom
 
         Node<T> forsteNode = førstePostorden(rot); //finner første node i postorder med start i rot
         oppgave.utførOppgave(forsteNode.verdi); //utfører oppgaven på verdien av første node.
 
-        Node <T> nesteNode = nestePostorden(forsteNode); //finner neste node av første node.
+        Node<T> nesteNode = nestePostorden(forsteNode); //finner neste node av første node.
 
-        while(nesteNode!=null) { //så lenge er det en neste node
+        while (nesteNode != null) { //så lenge er det en neste node
             oppgave.utførOppgave(nesteNode.verdi); //utfører den en oppgave på dens verdi
             nesteNode = nestePostorden(nesteNode);//og itererer til neste node.
         }
@@ -209,9 +265,9 @@ public class EksamenSBinTre<T> {
     }
 
     private void postordenRecursive(Node<T> p, Oppgave<? super T> oppgave) {
-        if(p==null) return; //sjekker om p er null den skal stoppe rekursjonen.
-        postordenRecursive(p.venstre,oppgave);// gå til venstre barnet til p og utfører samme oppgave.
-        postordenRecursive(p.høyre,oppgave);//går til høyre barnet etter at venstre barna er ferdi.
+        if (p == null) return; //sjekker om p er null den skal stoppe rekursjonen.
+        postordenRecursive(p.venstre, oppgave);// gå til venstre barnet til p og utfører samme oppgave.
+        postordenRecursive(p.høyre, oppgave);//går til høyre barnet etter at venstre barna er ferdi.
         oppgave.utførOppgave(p.verdi);//utfører oppgaven på verdien til noden.
     }
 
@@ -222,22 +278,25 @@ public class EksamenSBinTre<T> {
     static <K> EksamenSBinTre<K> deserialize(ArrayList<K> data, Comparator<? super K> c) {
         throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
+
     //hjelpe metoder til oppgave 6:
-    private Node<T> nesteInorden(Node<T> p){
+    private static <T> Node<T> nesteInorden(Node<T> p) {
+        
+
         return null;
     }
 
-    public static <T> Node<T> finnNode(T verdi,Node<T> rot,Comparator<? super T> comp){
+    private static <T> Node<T> finnNode(T verdi, Node<T> rot, Comparator<? super T> comp) {
         Node<T> current = rot;
         Node<T> riktig_node = null;
         int comperator;
-        while(current!=null){
+        while (current != null) {
             comperator = comp.compare(current.verdi, verdi);
-            if(comperator > 0){
+            if (comperator > 0) {
                 current = current.venstre;
-            }else if(comperator < 0){
+            } else if (comperator < 0) {
                 current = current.høyre;
-            }else{
+            } else {
                 riktig_node = current;
                 break;
             }
