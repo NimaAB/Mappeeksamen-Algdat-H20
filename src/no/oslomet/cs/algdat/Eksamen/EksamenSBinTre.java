@@ -120,8 +120,8 @@ public class EksamenSBinTre<T> {
     }
 
     public boolean fjern(T verdi) {
-        
-        return true;
+        Node<T> node = finnNode(verdi, rot, comp);
+        return node != null;
     }
 
     public int fjernAlle(T verdi) {
@@ -221,6 +221,28 @@ public class EksamenSBinTre<T> {
 
     static <K> EksamenSBinTre<K> deserialize(ArrayList<K> data, Comparator<? super K> c) {
         throw new UnsupportedOperationException("Ikke kodet ennå!");
+    }
+    //hjelpe metoder til oppgave 6:
+    private Node<T> nesteInorden(Node<T> p){
+        return null;
+    }
+
+    public static <T> Node<T> finnNode(T verdi,Node<T> rot,Comparator<? super T> comp){
+        Node<T> current = rot;
+        Node<T> riktig_node = null;
+        int comperator;
+        while(current!=null){
+            comperator = comp.compare(current.verdi, verdi);
+            if(comperator > 0){
+                current = current.venstre;
+            }else if(comperator < 0){
+                current = current.høyre;
+            }else{
+                riktig_node = current;
+                break;
+            }
+        }
+        return riktig_node;
     }
 
 
