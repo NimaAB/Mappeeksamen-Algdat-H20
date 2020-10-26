@@ -190,22 +190,16 @@ public class EksamenSBinTre<T> {
     }
 
     public void postorden(Oppgave<? super T> oppgave) {
-        ArrayDeque<Node<T>> stakEn = new ArrayDeque<>();//lager en stak for å legge nodene middlertidig inn.
-        ArrayDeque<Node<T>> stakTo = new ArrayDeque<>();//denne stakken skal lagre noden i riktig rekkefølge.
-        stakEn.push(rot); //legger til noden vi begynner fra i stakken (f.eks. rot)
-        while (!stakEn.isEmpty()) {//så lenge stakk en er ikke tom
-            Node<T> current = stakEn.pop(); //tar ut første noden fra stakk en og beolder den i current
-            if (current.venstre != null) { //hvis current har venstre barn
-                stakEn.push(current.venstre);//så legges den inn i stakk en
-            }
-            if (current.høyre != null) {//der etter sjekker for høyre barn
-                stakEn.push(current.høyre); //så legges den etter venstre barnet.
-            }
-            stakTo.push(current);//tilslutt legger vi foreldren dere til stakTo.
-        }
-        while(!stakTo.isEmpty()){
-            T valueOfCurrentNode =  stakTo.removeFirst().verdi;
-            oppgave.utførOppgave(valueOfCurrentNode);
+        if(rot == null) return; //sjekker om treet ikke tom
+
+        Node<T> forsteNode = førstePostorden(rot); //finner første node i postorder med start i rot
+        oppgave.utførOppgave(forsteNode.verdi); //utfører oppgaven på verdien av første node.
+
+        Node <T> nesteNode = nestePostorden(forsteNode); //finner neste node av første node.
+
+        while(nesteNode!=null) { //så lenge er det en neste node
+            oppgave.utførOppgave(nesteNode.verdi); //utfører den en oppgave på dens verdi
+            nesteNode = nestePostorden(nesteNode);//og itererer til neste node.
         }
     }
 
@@ -214,7 +208,10 @@ public class EksamenSBinTre<T> {
     }
 
     private void postordenRecursive(Node<T> p, Oppgave<? super T> oppgave) {
-
+        if(p==null) return; //sjekker om p er null den skal stoppe rekursjonen.
+        postordenRecursive(p.venstre,oppgave);// gå til venstre barnet til p og utfører samme oppgave.
+        postordenRecursive(p.høyre,oppgave);//går til høyre barnet etter at venstre barna er ferdi.
+        oppgave.utførOppgave(p.verdi);//utfører oppgaven på verdien til noden.
     }
 
     public ArrayList<T> serialize() {

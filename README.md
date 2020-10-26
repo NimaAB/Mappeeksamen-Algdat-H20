@@ -26,11 +26,17 @@ jeg begynner med å sjekke om verdien finnes i treet med metoden inneholder(verd
 Hvor jeg pusher foreldre nodene i hjelpestakken, så poper dem ut og legger til venstre og etter på høyre barna deres i hjelpe stakken. Og til slutt legges de 
 i hoved stakken. Etter at hjelpe stakken blir tom så returneres det første noden fra hoved stakken.
 
-Metoden nestePostorden(p) sjekker først om p er rot, hvis det er sant så har den ikke neste node i postorden rekkefølge.
-etter på sjekkes det om p er høyre barnet til subtreet, hvis det så er neste node forelderen dens.
-Hvis ingen av de overst er riktig, så peker jeg på foreldren til p og lager en annen peker som peker på siste noden som den forrige har pekt på.
-så lenge den første pekeren ikke null gjørs følgende: 
-har pekeren venstre eller er den lik venstre barn, så er vi ikke intresert i det og går og peker på høyre barn.
-ellers går vi og peker på venstre barnet.
+    Metoden nestePostorden(p) sjekker først om p er rot, hvis det er sant så har den ikke neste node i postorden rekkefølge.
+    etter på sjekkes det om p er høyre barnet til subtreet, hvis det så er neste node forelderen dens.
+    Hvis ingen av de overst er riktig, så peker jeg på foreldren til p og lager en annen peker som peker på siste noden som den forrige har pekt på.
+    så lenge den første pekeren ikke null gjørs følgende: 
+    har pekeren venstre eller er den lik venstre barn, så er vi ikke intresert i det og går og peker på høyre barn.
+    ellers går vi og peker på venstre barnet.
 
-* **no.oslomet.cs.algdat.Oppgave 4:** 
+* **no.oslomet.cs.algdat.Oppgave 4:** Første postorden metoden er implementert slik: Den sjekker om treet ikke er tomt. Etter på finner jeg 
+førte postorden noden ved hjelp av førstePostorden(p) hvor p er rot noden. Etter på utfører jeg oppgaven på dens verdi og finner neste node etter den ved hjelp
+av nestPostorden(p) hvor p er første noden jeg har funnet. Og begynner en while-løkke så lenge er det en neste node. Og utfører oppgaven på en ig en av dem, og finner dem.
+
+    Og den rekursive metoden er implementert slik: Jeg begynner med å sjekke om p er null, denne sjekken skal stoppe rekursjonen når den når siste nivå i treet.
+    etter på kaller jeg på metoden to ganger først passer jeg inn p sin venstre barn, etter på p sin høyre barn, tilslutt utføres oppgaven på verdien til p.
+
