@@ -120,7 +120,8 @@ public class EksamenSBinTre<T> {
     }
 
     public boolean fjern(T verdi) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        
+        return true;
     }
 
     public int fjernAlle(T verdi) {
