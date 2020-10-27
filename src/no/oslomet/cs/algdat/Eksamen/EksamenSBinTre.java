@@ -201,7 +201,7 @@ public class EksamenSBinTre<T> {
     }
 
     public int fjernAlle(T verdi) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
     }
 
     public int antall(T verdi) {
@@ -225,7 +225,12 @@ public class EksamenSBinTre<T> {
     }
 
     public void nullstill() {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        Node<T> forste_node;
+        while(antall!=0){
+            forste_node = førstePostorden(rot);
+            forste_node = null;
+            antall--;
+        }
     }
 
     private static <T> Node<T> førstePostorden(Node<T> p) {
