@@ -120,89 +120,59 @@ public class EksamenSBinTre<T> {
     }
 
     public boolean fjern(T verdi) {
-        //treet er tom:
-        if (antall == 0) {
-            return false;
-        }
-        //finner noden med hjelpe metoden:
+        if(antall==0) return false;
+
+        if (verdi == null) return false;
         Node<T> node = finnNode(verdi, rot, comp);
-        //hvis noden ikke finnes i treet:
-        if (node == null) {
-            return false;
-        }
+        if (node == null) return false;
 
-        //node er rot og antall nodene i treet er mindre eller lik 2:
-        if (node == rot && antall <= 2) {
-            if (antall == 2) {
-                if (rot.venstre != null) {
-                    rot = rot.venstre;
-                } else {
-                    rot = rot.høyre;
-                }
-            } else {
-                rot = null;
-            }
-            antall--;
-            return true;
-        }
-        //noden er blad node:
-        if (node.venstre == null && node.høyre == null) {
-            //noden er venstre barn:
-            if (node == node.forelder.venstre) {
-                node.forelder.venstre = null;
-            }
-            //node er høyre barn:
-            else {
-                node.forelder.høyre = null;
-            }
-            antall--;
-            return true;
-        }
-        //node har enten venstre eller høyre barn:
-        if (node.venstre != null ^ node.høyre != null) {
-            if (node.venstre != null) {
-                if (node == node.forelder.venstre) {
-                    node.forelder.venstre = node.venstre;
-                } else {
-                    node.forelder.høyre = node.venstre;
-                }
-                node.venstre.forelder = node.forelder;
-            } else {
-                if (node == node.forelder.venstre) {
-                    node.forelder.venstre = node.høyre;
-                } else {
-                    node.forelder.høyre = node.høyre;
-                }
-                node.høyre.forelder = node.forelder;
-            }
-            antall--;
-            return true;
-        }
+        Node<T> nodes_forelder = (node != rot) ? node.forelder : node;
 
-        //node har begge barna:
-        //finner neste inorden med hjelpe metoden min:
-        Node<T> nyNode = nesteInorden(node);
-        //hvis de hadde ikke neste inorden:
-        if (nyNode == null) return false;
-        //hvis node vi skal slette har ulik verdi enn nest inorden noden:
-        if (node.verdi != nyNode.verdi) {
-            node.verdi = nyNode.verdi; //byter på verdien
-            return fjern(nyNode.verdi); //kaller på metoden rekursivt for å fjerne den noden
-        } else { //ellers så har de lik verdi i dette til felle rekurivt løsning gir "stackOverFlow"
-            //hvis den nesteInorden noden er venstre barn.
-            if (nyNode.forelder.venstre == nyNode) {
-                nyNode.forelder.venstre = null;
-            } else { //ellers så er den høyre barn
-                nyNode.forelder.høyre = null;
+        //noden har ikke venstre og/eller høyre barn:
+        //noden er blad node eller den har bare et barn.
+        if (node.venstre == null || node.høyre == null) {
+            Node<T> nodes_barn = (node.venstre != null) ? node.venstre : node.høyre;
+            if (node == rot) {
+                rot = nodes_barn;
+            } else if (node == nodes_forelder.venstre) {
+                nodes_forelder.venstre = nodes_barn;
+            } else {
+                nodes_forelder.høyre = nodes_barn;
             }
-            antall--;
-            return true;
+        } else {
+            Node<T> nesteInorden = nesteInorden(node);
+
+            if (nesteInorden != null) {
+                Node<T> neste_sin_forelder = nesteInorden.forelder;
+
+                node.verdi = nesteInorden.verdi;
+                if (nesteInorden.venstre == null && nesteInorden.høyre==null) {
+                    neste_sin_forelder.venstre = null;
+                } else {
+                    neste_sin_forelder.venstre = nesteInorden.høyre;
+                    nesteInorden.høyre.forelder = neste_sin_forelder;
+                }
+            }
         }
+        return true;
     }
 
     public int fjernAlle(T verdi) {
-
+        if (antall == 1 || antall == 0) {
+            if (inneholder(verdi)) {
+                rot = null;
+                antall--;
+                return 1;
+            }
+            return 0;
+        }
+        int teller = 0;
+        while (fjern(verdi)) {
+            teller++;
+        }
+        return teller;
     }
+
 
     public int antall(T verdi) {
         if (!inneholder(verdi)) return 0; //Hvis treet ikke inneholder verdien så returnerer jeg 0.
@@ -225,10 +195,32 @@ public class EksamenSBinTre<T> {
     }
 
     public void nullstill() {
-        Node<T> forste_node;
-        while(antall!=0){
-            forste_node = førstePostorden(rot);
-            forste_node = null;
+        if (antall == 0) {
+            return;
+        }
+        if (antall == 1) {
+            rot = null;
+            antall--;
+            return;
+        }
+
+        Node<T> forste = førstePostorden(rot);
+        Node<T> neste = nestePostorden(forste);
+
+        if (forste == forste.forelder.høyre) {
+            forste.forelder.høyre = null;
+        } else {
+            forste.forelder.venstre = null;
+        }
+
+        while (neste != null) {
+            if (neste == neste.forelder.høyre) {
+                neste.forelder.høyre = null;
+            } else {
+                neste.forelder.venstre = null;
+            }
+
+            neste = nestePostorden(neste);
             antall--;
         }
     }
@@ -305,10 +297,11 @@ public class EksamenSBinTre<T> {
     }
 
 
-
     // hjelpe Metoder for oppgave 6:
+
     /**
      * metoden finner neste inorden node for
+     *
      * @param p noden
      * @return neste inorden nodenm, og null hvis p ikke har høyre barn.
      */
@@ -331,10 +324,11 @@ public class EksamenSBinTre<T> {
 
     /**
      * metoden finner noden med dens verdi.
+     *
      * @param verdi noden vi letter etter har denne verdi.
-     * @param rot søk begynner fra denne roten.
-     * @param comp Comperator
-     * @param <T> generiske typen T
+     * @param rot   søk begynner fra denne roten.
+     * @param comp  Comperator
+     * @param <T>   generiske typen T
      * @return null hvis den noden ikke er funnet, ellers noden.
      */
     private static <T> Node<T> finnNode(T verdi, Node<T> rot, Comparator<? super T> comp) {
