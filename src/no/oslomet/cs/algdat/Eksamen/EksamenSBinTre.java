@@ -296,7 +296,11 @@ public class EksamenSBinTre<T> {
     }
 
     static <K> EksamenSBinTre<K> deserialize(ArrayList<K> data, Comparator<? super K> c) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        EksamenSBinTre<K> tre =  new EksamenSBinTre<>(c); //Instansierer et tre som skal returners.
+        for(K element : data){ //går gjennom data arraylisten og henter ut verdeiene
+            tre.leggInn(element); //legger inn hver verdi i treet ved hjelp av legginn metoden.
+        }
+        return tre; //returnerer treet.
     }
 
 
