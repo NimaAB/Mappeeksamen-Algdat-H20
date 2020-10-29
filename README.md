@@ -14,7 +14,7 @@ Se oblig-tekst for alle krav, og husk spesielt på følgende:
 
 # Beskrivelse av oppgaveløsning (4-8 linjer/setninger per oppgave)
 
-Jeg har brukt git til å dokumentere arbeidet vårt. Jeg har <ant-commits> commits totalt, og hver logg-melding beskriver det jeg har gjort av endringer.
+Jeg har brukt git til å dokumentere arbeidet vårt. Jeg har **21** commits totalt, og hver logg-melding beskriver det jeg har gjort av endringer.
 * **Oppgave 0:** Started 20.10.2020  med å lage git repository og fikse litt av import feilene.
 
 * **no.oslomet.cs.algdat.Eksamen.Oppgave 1:** løste oppgaven ved å deklere to pekere en peker på roten og den andre peker på null.

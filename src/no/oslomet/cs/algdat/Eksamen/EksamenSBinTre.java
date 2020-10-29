@@ -78,7 +78,7 @@ public class EksamenSBinTre<T> {
     public boolean tom() {
         return antall == 0;
     }
-    
+
     //LeggInn er implimentert ved hjelp programkode 5.2.3 a)
     public boolean leggInn(T verdi) {
         Objects.requireNonNull(verdi, "Nullverdi er ikke lov!"); //sjekker om verdi ikke lik "null"
