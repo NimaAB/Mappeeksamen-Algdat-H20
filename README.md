@@ -40,3 +40,15 @@ av nestPostorden(p) hvor p er første noden jeg har funnet. Og begynner en while
     Og den rekursive metoden er implementert slik: Jeg begynner med å sjekke om p er null, denne sjekken skal stoppe rekursjonen når den når siste nivå i treet.
     etter på kaller jeg på metoden to ganger først passer jeg inn p sin venstre barn, etter på p sin høyre barn, tilslutt utføres oppgaven på verdien til p.
 
+* **no.oslomet.cs.algdat.Oppgave 5:**
+
+* **no.oslomet.cs.algdat.Oppgave 6:** I denne oppgaven har jeg begynet med å lage to hjelpe metodene *nesteInorden()* og *finnNode()*,
+ etter på har jeg implementert *fjern()* metoden ved hjelp av programkoden **5.2.8 d)** etter flere forsøk for å implementere det selv.
+ metoden tar hensyn til tre tilfeller: 1) noden er blad node. 2)noden har et barn venstre eller høyre. 3) noden har begge høyre og venstre barna.
+ *nesteInorden()* bruker jeg i tredje tilfelle og *finnNode()* bruker jeg i starten av  metoden for å finne noden vi vil fjerne.
+ 
+     *nullstill()* metoden er implemenert slik at henter nodene i postorden rekke følge og fjerner dem, grunnen til det vær at i postorden blir nodene blad noder etter
+     fjerning. Den skal først til venstre barnet slette det, deretter til høyre barnet slette den og til slutt til foreldre node som nå den selv er blad node.
+     som er enkelt å slette.
+     
+     *fjernAlle(verdi)* er implementert slik at den sletter en å en noder med verdi lik verdi parameteren, i en while-løkke som fortsetter så lenge fjern() returnerer sann.    

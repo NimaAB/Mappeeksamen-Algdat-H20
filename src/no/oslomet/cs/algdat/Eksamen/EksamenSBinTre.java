@@ -114,63 +114,75 @@ public class EksamenSBinTre<T> {
             //legger til som høyre barn:
             previous.høyre = current;
         }
-
+        endringer++;
         antall++; //oppdaterer antall tallet med +1
         return true; // returnerer sant
     }
 
+    //følgende kode er skrevet ved hjelp av programkode 5.2.8 d) fra kompendium
     public boolean fjern(T verdi) {
-        if(antall==0) return false;
+        if(antall==0) return false; // sjekker om treet er tom hvis det så er det false.
+        if (verdi == null) return false;//sjekker om verdi ikke er null.
+        if(!inneholder(verdi)) return false; //sjekker om treet inneholdet følgende verdi.
 
-        if (verdi == null) return false;
-        Node<T> node = finnNode(verdi, rot, comp);
-        if (node == null) return false;
+        Node<T> node = finnNode(verdi, rot, comp); //finner noden med verdien
+        if (node == null) return false; //kjekker om noden ikke er null
 
-        Node<T> nodes_forelder = (node != rot) ? node.forelder : node;
+        Node<T> nodes_forelder = (node != rot) ? node.forelder : null; //lager en node som er foreldren til node vi skal fjerne.
+        //hvis noden ikke er rot da har den en foreldre node, eller er den rot og foreldre noden er null.
 
         //noden har ikke venstre og/eller høyre barn:
         //noden er blad node eller den har bare et barn.
         if (node.venstre == null || node.høyre == null) {
-            Node<T> nodes_barn = (node.venstre != null) ? node.venstre : node.høyre;
+            //lager en node som er barnet til node vi skal slette, den skal være enten venstre eller høyre barn hvis en av dem ikke er null. ellers så er den null
+            //hvis den er null så betyr det at den er blad node.
+            Node<T> nodes_barn = (node.venstre != null) ? node.venstre : (node.høyre!=null) ? node.høyre : null;
             if (node == rot) {
-                rot = nodes_barn;
+                rot = nodes_barn; //hvis noden er roten til treet så blir barnet den nye roten.
             } else if (node == nodes_forelder.venstre) {
-                nodes_forelder.venstre = nodes_barn;
+                nodes_forelder.venstre = nodes_barn; //noden er foreldrens venstre barn, da skal foreldren sin venstre peker peke på barnet til noden.
             } else {
-                nodes_forelder.høyre = nodes_barn;
+                nodes_forelder.høyre = nodes_barn; //eller foreldren sin høyre peker peker på barnet.
             }
-        } else {
-            Node<T> nesteInorden = nesteInorden(node);
+            if(nodes_barn!=null){ //hvis barnet ikke var null
+                nodes_barn.forelder = nodes_forelder; //så setter vi barnet sitt foreldre også til noden sin foreldre.
+            }
+        } else { // noden vi skal slette har både venstre og høyre barn
+            Node<T> nesteInorden = nesteInorden(node); //her finner vi neste inorden noden, fordi den passer best til plassen for å bevære treet som et binært søke tre.
 
-            if (nesteInorden != null) {
-                Node<T> neste_sin_forelder = nesteInorden.forelder;
+            if (nesteInorden != null) { //hvis neste inorden ikke var null.
+                Node<T> neste_sin_forelder = nesteInorden.forelder; //lages det en node som inne holder neste inorden noden sin foreldre.
+                //jeg bruker det for å sletting av noden.
 
-                node.verdi = nesteInorden.verdi;
-                if (nesteInorden.venstre == null && nesteInorden.høyre==null) {
-                    neste_sin_forelder.venstre = null;
+                node.verdi = nesteInorden.verdi; //legger verdien til nesteInorden noden i noden vi skal slette.
+                if (nesteInorden.venstre == null && nesteInorden.høyre==null) { //hvis neste inorden noden noden var blad node.
+                    neste_sin_forelder.venstre = null; //fjerner venstre barnet til neste inorden noden.
+                    //jeg sletter ikke høyre barnet, fordi i inorden rekkefølgen har vi (venstre, foreldre, høyre) rekken.
                 } else {
-                    neste_sin_forelder.venstre = nesteInorden.høyre;
-                    nesteInorden.høyre.forelder = neste_sin_forelder;
+                    //eller er den ikke blad node:
+                    neste_sin_forelder.venstre = nesteInorden.høyre; //venstre barnet til foreldren skal nå være høyre barnet til nesteInorder noden.
+                    nesteInorden.høyre.forelder = neste_sin_forelder; //og foreldren til høyre barnet av nesteInorden noden skal være foreldren til nesteInorder noden.
+
+                    //grunnen at jeg oppretter pekerne bare til høyre barnet av neste inorden node, er det hvis en forledere node skal være neste inorden
+                    //da må den ikke ha venstre barn men bare høyre barn.
                 }
             }
         }
+        //oppdatere antall og endringer.
+        endringer++;
+        antall--;
         return true;
     }
 
     public int fjernAlle(T verdi) {
-        if (antall == 1 || antall == 0) {
-            if (inneholder(verdi)) {
-                rot = null;
-                antall--;
-                return 1;
-            }
+        if (antall == 0) { //sjekker om treet ikke tom
             return 0;
         }
-        int teller = 0;
-        while (fjern(verdi)) {
-            teller++;
+        int teller = 0; // den skal telle opp antall like verdier som blir slettet
+        while (fjern(verdi)) { //så lenge fjern returnerer true. noden med verdi parameter slettes
+            teller++; //teller øker med en.
         }
-        return teller;
+        return teller; // returnerer antall like som er sletter.
     }
 
 
@@ -195,33 +207,24 @@ public class EksamenSBinTre<T> {
     }
 
     public void nullstill() {
-        if (antall == 0) {
+        if (antall == 0) { //sjekker om treet ikke tom
             return;
         }
-        if (antall == 1) {
-            rot = null;
-            antall--;
-            return;
+        if (antall == 1) { //hvis treet har en node
+            rot = null; //da er den roten og den skal nulles.
+            antall--; // antall endres
+            endringer++; //endringer økes
+            return; //går ut av metoden
         }
 
-        Node<T> forste = førstePostorden(rot);
-        Node<T> neste = nestePostorden(forste);
-
-        if (forste == forste.forelder.høyre) {
-            forste.forelder.høyre = null;
-        } else {
-            forste.forelder.venstre = null;
-        }
-
-        while (neste != null) {
-            if (neste == neste.forelder.høyre) {
-                neste.forelder.høyre = null;
-            } else {
-                neste.forelder.venstre = null;
-            }
-
-            neste = nestePostorden(neste);
-            antall--;
+        Node<T> forste = førstePostorden(rot); //begynner med  føste node i post_orden
+        Node<T> neste = nestePostorden(forste); //og finner neste node av første noden i post orden.
+        fjern(forste.verdi);//fjerner første noden sin verdi.
+        Node<T> temp = neste; //lager noden temp som beholder neste noden midlertidig
+        while (neste != null) { //så er det en neste node, i rekken.
+            fjern(neste.verdi);//fjerner noden med neste sitt verdi
+            neste = nestePostorden(temp); //finner neste node for temp som nå er neste selv.
+            temp = neste; //lagrer neste i temp
         }
     }
 
@@ -301,7 +304,6 @@ public class EksamenSBinTre<T> {
 
     /**
      * metoden finner neste inorden node for
-     *
      * @param p noden
      * @return neste inorden nodenm, og null hvis p ikke har høyre barn.
      */
