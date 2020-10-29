@@ -78,7 +78,8 @@ public class EksamenSBinTre<T> {
     public boolean tom() {
         return antall == 0;
     }
-
+    
+    //LeggInn er implimentert ved hjelp programkode 5.2.3 a)
     public boolean leggInn(T verdi) {
         Objects.requireNonNull(verdi, "Nullverdi er ikke lov!"); //sjekker om verdi ikke lik "null"
 
@@ -121,9 +122,9 @@ public class EksamenSBinTre<T> {
 
     //følgende kode er skrevet ved hjelp av programkode 5.2.8 d) fra kompendium
     public boolean fjern(T verdi) {
-        if(antall==0) return false; // sjekker om treet er tom hvis det så er det false.
+        if (antall == 0) return false; // sjekker om treet er tom hvis det så er det false.
         if (verdi == null) return false;//sjekker om verdi ikke er null.
-        if(!inneholder(verdi)) return false; //sjekker om treet inneholdet følgende verdi.
+        if (!inneholder(verdi)) return false; //sjekker om treet inneholdet følgende verdi.
 
         Node<T> node = finnNode(verdi, rot, comp); //finner noden med verdien
         if (node == null) return false; //kjekker om noden ikke er null
@@ -136,7 +137,7 @@ public class EksamenSBinTre<T> {
         if (node.venstre == null || node.høyre == null) {
             //lager en node som er barnet til node vi skal slette, den skal være enten venstre eller høyre barn hvis en av dem ikke er null. ellers så er den null
             //hvis den er null så betyr det at den er blad node.
-            Node<T> nodes_barn = (node.venstre != null) ? node.venstre : (node.høyre!=null) ? node.høyre : null;
+            Node<T> nodes_barn = (node.venstre != null) ? node.venstre : (node.høyre != null) ? node.høyre : null;
             if (node == rot) {
                 rot = nodes_barn; //hvis noden er roten til treet så blir barnet den nye roten.
             } else if (node == nodes_forelder.venstre) {
@@ -144,7 +145,7 @@ public class EksamenSBinTre<T> {
             } else {
                 nodes_forelder.høyre = nodes_barn; //eller foreldren sin høyre peker peker på barnet.
             }
-            if(nodes_barn!=null){ //hvis barnet ikke var null
+            if (nodes_barn != null) { //hvis barnet ikke var null
                 nodes_barn.forelder = nodes_forelder; //så setter vi barnet sitt foreldre også til noden sin foreldre.
             }
         } else { // noden vi skal slette har både venstre og høyre barn
@@ -155,7 +156,7 @@ public class EksamenSBinTre<T> {
                 //jeg bruker det for å sletting av noden.
 
                 node.verdi = nesteInorden.verdi; //legger verdien til nesteInorden noden i noden vi skal slette.
-                if (nesteInorden.venstre == null && nesteInorden.høyre==null) { //hvis neste inorden noden noden var blad node.
+                if (nesteInorden.venstre == null && nesteInorden.høyre == null) { //hvis neste inorden noden noden var blad node.
                     neste_sin_forelder.venstre = null; //fjerner venstre barnet til neste inorden noden.
                     //jeg sletter ikke høyre barnet, fordi i inorden rekkefølgen har vi (venstre, foreldre, høyre) rekken.
                 } else {
@@ -292,12 +293,21 @@ public class EksamenSBinTre<T> {
     }
 
     public ArrayList<T> serialize() {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        ArrayDeque<Node<T>> hjelpe_kø = new ArrayDeque<>(); //Lager en kø for nodene.
+        ArrayList<T> node_verdier = new ArrayList<>(); //ArrayListen som skal returneres.
+        hjelpe_kø.addFirst(rot); //legger inn rot i den tomme køen, for å kunne gå i while-løkken.
+        while (!hjelpe_kø.isEmpty()) {//løkken forsetter frem til køen blir tom.
+            Node<T> current = hjelpe_kø.removeFirst(); //sletter første node i køen, og holder noden i current.
+            if (current.venstre != null) hjelpe_kø.addLast(current.venstre); //hvis noden har venstre barn legges den til køen.
+            if (current.høyre != null) hjelpe_kø.addLast(current.høyre); //hvis noden har høyre barn legges den til køen.
+            node_verdier.add(current.verdi); //legger verdien av den slettede noden i ArrayListen
+        }
+        return node_verdier; //returnerer ArrayList-en
     }
 
     static <K> EksamenSBinTre<K> deserialize(ArrayList<K> data, Comparator<? super K> c) {
-        EksamenSBinTre<K> tre =  new EksamenSBinTre<>(c); //Instansierer et tre som skal returners.
-        for(K element : data){ //går gjennom data arraylisten og henter ut verdeiene
+        EksamenSBinTre<K> tre = new EksamenSBinTre<>(c); //Instansierer et tre som skal returners.
+        for (K element : data) { //går gjennom data arraylisten og henter ut verdeiene
             tre.leggInn(element); //legger inn hver verdi i treet ved hjelp av legginn metoden.
         }
         return tre; //returnerer treet.
@@ -308,6 +318,7 @@ public class EksamenSBinTre<T> {
 
     /**
      * metoden finner neste inorden node for
+     *
      * @param p noden
      * @return neste inorden nodenm, og null hvis p ikke har høyre barn.
      */
