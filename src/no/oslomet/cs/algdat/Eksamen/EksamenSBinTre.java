@@ -230,22 +230,17 @@ public class EksamenSBinTre<T> {
     }
 
     private static <T> Node<T> førstePostorden(Node<T> p) {
-        ArrayDeque<Node<T>> stakEn = new ArrayDeque<>();//lager en stak for å legge nodene middlertidig inn.
-        ArrayDeque<Node<T>> stakTo = new ArrayDeque<>();//denne stakken skal lagre noden i riktig rekkefølge.
-        stakEn.push(p); //legger til noden vi begynner fra i stakken (f.eks. rot)
-        while (!stakEn.isEmpty()) {//så lenge stakk en er ikke tom
-            Node<T> current = stakEn.pop(); //tar ut første noden fra stakk en og beolder den i current
-            if (current.venstre != null) { //hvis current har venstre barn
-                stakEn.push(current.venstre);//så legges den inn i stakk en
-            }
-            if (current.høyre != null) {//der etter sjekker for høyre barn
-                stakEn.push(current.høyre); //så legges den etter venstre barnet.
-            }
-            stakTo.push(current);//tilslutt legger vi foreldren dere til stakTo.
+        while(p.venstre!=null){ //sjekker om p har venstre barn
+            p = p.venstre; //så lenge den har det så skal den bil venstre barnet sitt.
+        }//når p ikke har venstre barn lenger så kommer den ut den er lik den siste noden før null.
+        if(p.høyre==null){//jeg vet at p har ikke venstre barn, menher sjekker jeg for om den ikke har høyre barn også
+            //det vil si at p er blad node på venstre side og da kan jeg bare returnere denne.
+           return p;
+        }else{//ellers så har den høyre barn og da må vi repitere logikken på nytt
+            return førstePostorden(p.høyre); //kaller metoden selv og legger inn høyre barnet.
         }
-        return stakTo.peekFirst();//og i slutten returneres føste noden i stakk to.
-    }
 
+    }
 
     private static <T> Node<T> nestePostorden(Node<T> p) {
         if (p.forelder == null) { //hvis p ikke har forledre, dvs. p er rot
@@ -298,8 +293,10 @@ public class EksamenSBinTre<T> {
         hjelpe_kø.addFirst(rot); //legger inn rot i den tomme køen, for å kunne gå i while-løkken.
         while (!hjelpe_kø.isEmpty()) {//løkken forsetter frem til køen blir tom.
             Node<T> current = hjelpe_kø.removeFirst(); //sletter første node i køen, og holder noden i current.
-            if (current.venstre != null) hjelpe_kø.addLast(current.venstre); //hvis noden har venstre barn legges den til køen.
-            if (current.høyre != null) hjelpe_kø.addLast(current.høyre); //hvis noden har høyre barn legges den til køen.
+            if (current.venstre != null)
+                hjelpe_kø.addLast(current.venstre); //hvis noden har venstre barn legges den til køen.
+            if (current.høyre != null)
+                hjelpe_kø.addLast(current.høyre); //hvis noden har høyre barn legges den til køen.
             node_verdier.add(current.verdi); //legger verdien av den slettede noden i ArrayListen
         }
         return node_verdier; //returnerer ArrayList-en
@@ -313,7 +310,70 @@ public class EksamenSBinTre<T> {
         return tre; //returnerer treet.
     }
 
+    //ekstrametoder:
+    //føsteInorden:
+    private static <T> Node<T> førsteInorden(Node<T> p){
+        if(p.venstre!=null) {
+            while(p.venstre!=null){
+                p = p.venstre;
+            }
+            return p;
+        }else if(p.høyre!=null) {
+            return førsteInorden(p.høyre);
+        } else {
+            return p;
+        }
+    }
+    //nestePreordden:
+    private static <T> Node<T> nestePreorden(Node<T> p){
+        if(p.venstre!=null) return p.venstre;
+        else if(p.høyre!=null) return p.høyre;
+        else{
+            Node<T> cur = p.forelder;
+            while(cur!=null && cur.høyre ==p){
+                cur = cur.forelder;
+                p = p.forelder;
+            }
+            if(cur!=null){
+                return cur.høyre;
+            }else{
+                return null;
+            }
+        }
 
+    }
+    //Inorden tostring:
+    public String inorderToString(){
+        if(tom()) return "[]";
+        StringJoiner sj = new StringJoiner(",","[","]");
+        Node<T> forste = førstePostorden(rot);
+        while(forste!=null){
+            sj.add(forste.verdi.toString());
+            forste=nesteInorden(forste);
+        }
+        return sj.toString();
+    }
+    //Preorden toString:
+    public String preorderToString(){
+        if(tom()) return "[]";
+        StringJoiner sj = new StringJoiner(",","[","]");
+        Node<T> forste = rot;
+        while(forste!=null){
+            sj.add(forste.verdi.toString());
+            forste=nestePreorden(forste);
+        }
+        return sj.toString();
+    }
+    //levelorder toString:
+    public String levelorderToString(){
+        if(tom()) return "[]";
+        StringJoiner sj = new StringJoiner(",","[","]");
+        ArrayList<T> data = serialize();
+        for(T el : data){
+            sj.add(el.toString());
+        }
+        return sj.toString();
+    }
     // hjelpe Metoder for oppgave 6:
 
     /**
